@@ -1,0 +1,19 @@
+﻿========================
+lc-chat README
+========================
+Version 1.0
+Author LongChangjin
+E-mail admin@longchangjin.cn
+
+
+About
+    一个简单的仿聊天室的程序。
+    server为程序的服务器版；
+    client为程序的客户端。
+
+Dependencies
+    Python 2.x
+    PyGTK
+
+License
+    该程序基于GPL协议发布。
