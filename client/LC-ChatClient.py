@@ -173,6 +173,7 @@ class ChatClient:
                 self.messagedialog.show()
                 return
         self.ADDR = (self.HOST,int(self.PORT))
+        self.tcpCliSock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         try:
             self.tcpCliSock.connect(self.ADDR)
         except Exception,e:
@@ -187,6 +188,7 @@ class ChatClient:
         fmt = str(user_len) + 's' + str(passwd_len) + 's'
         try:
             self.tcpCliSock.send(fmt)
+            time.sleep(1)
         except Exception,e:
                 print e
                 self.Warning_label.set_text(u"与服务器连接失败！")
@@ -194,7 +196,7 @@ class ChatClient:
                 #self.tcpCliSock.close()
                 return
         sendData = struct.pack(fmt,username,password)
-        #print sendData
+        #print fmt, sendData
         try:
             self.tcpCliSock.send(sendData)        #登陆
             Confirm = self.tcpCliSock.recv(1)     #判断登陆
@@ -243,7 +245,6 @@ class ChatClient:
         self.HOST = 'localhost'
         self.PORT = 21567
         self.BUFSIZ = 1024
-        self.tcpCliSock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         self.privateMessage = 1 #是否私聊
         #初始化 gtkbuilder
         builder = gtk.Builder()

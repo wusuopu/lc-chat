@@ -138,19 +138,25 @@ class ChatServer:
     def WaitCon(self):        
         while True:
             #print "self.ProNum:"+str(self.ProNum)
-            #print('waiting for connection...')
+            print('waiting for connection...')
             tcpClientSocket,addr = self.tcpServSocket.accept()
+            thread.start_new_thread(self.WaitCon2, (tcpClientSocket, addr,))
+    def WaitCon2(self, tcpClientSocket, addr):
+            #print tcpClientSocket, addr
             self.ProNum -= 1
                 
             #检查登陆
             fmt = tcpClientSocket.recv(self.BUFSIZE)
+            #print "fmt:",fmt
             data = tcpClientSocket.recv(self.BUFSIZE)
+            #print "data:",data
                 
             if self.ProNum == 0:
                 tcpClientSocket.send('0')
                 tcpClientSocket.close()
                 self.ProNum += 1
-                continue
+                #continue
+                thread.exit()
                 
             Userdata = struct.unpack(fmt,data)
             #data = CheckLogin(userdata[0],userdata[1])
@@ -172,7 +178,8 @@ class ChatServer:
             if sendData == 'F':        #密码错误
                 tcpClientSocket.close()
                 self.ProNum += 1
-                break
+                #break
+                thread.exit()
             #print('connected from:',addr,'\n')
         
             self.TCPList[Userdata[0]]=tcpClientSocket
@@ -247,10 +254,10 @@ class ChatServer:
         self.lock = thread.allocate_lock()
         self.lock.acquire()
         
-        i = 0
-        while i < self.MAXTHREAD:
-            thread.start_new_thread(self.WaitCon,())
-            i += 1
+        #i = 0
+        #while i < self.MAXTHREAD:
+        thread.start_new_thread(self.WaitCon,())
+        #    i += 1
 
 if __name__ == "__main__":
     window=ChatServer()
